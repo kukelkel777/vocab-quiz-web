@@ -26,8 +26,9 @@ const DEFAULT_WORDS = `[1페이지: 1~28번]
 23. corresponding : 상응하는
 24. be entitled to do : ~할 자격이 있다
 25. to put it mildly : 부드럽게 말하자면
-26. confidently : 확신에 찬
-27. fulfill one's end of the bargain : ~의 의무를 다하다
+26. all that : 그다지
+27. confidently : 확신에 찬
+28. fulfill one's end of the bargain : ~의 의무를 다하다
 
 [2페이지: 29~58번]
 29. obligation : 의무, 책임
