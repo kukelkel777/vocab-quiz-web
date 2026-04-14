@@ -1,488 +1,488 @@
 import { useState, useEffect, useRef } from "react";
 
 const DEFAULT_WORDS = `[1페이지: 1~28번]
-1. tactic : 전술
-2. military : 군대의
-3. vein : 맥락
-4. nanosecond : 나노초
-5. deal with : ~을 다루다
-6. potential : 잠재력
-7. profound : 심오한
-8. perspective : 관점
-9. springboard : 도약의 발판
-10. reflection on : ~에 대한 성찰
-11. term : 용어
-12. strategy : 전략
-13. impose on : ~에 부과하다
-14. finite : 유한한
-15. eliminate : 제거하다
-16. reorient : 바꾸다
-17. transform : 바꾸다
-18. burden : 부담
-19. critique : 비판
-20. be inclined to do : ~하는 성향이 있다
-21. athlete : (운동)선수
-22. owe : (보답으로 무언가를) 해 주어야 한다
-23. corresponding : 상응하는
-24. be entitled to do : ~할 자격이 있다
-25. to put it mildly : 부드럽게 말하자면
-26. all that : 그다지
-27. confidently : 확신에 찬
-28. fulfill one's end of the bargain : ~의 의무를 다하다
+1. tactic [n] : 전술
+2. military [a] : 군대의
+3. vein [n] : 맥락
+4. nanosecond [n] : 나노초
+5. deal with [v] : ~을 다루다
+6. potential [n] : 잠재력
+7. profound [a] : 심오한
+8. perspective [n] : 관점
+9. springboard [n] : 도약의 발판
+10. reflection on [n] : ~에 대한 성찰
+11. term [n] : 용어
+12. strategy [n] : 전략
+13. impose on [v] : ~에 부과하다
+14. finite [a] : 유한한
+15. eliminate [v] : 제거하다
+16. reorient [v] : 바꾸다
+17. transform [v] : 바꾸다
+18. burden [n] : 부담
+19. critique [n] : 비판
+20. be inclined to do [v] : ~하는 성향이 있다
+21. athlete [n] : (운동)선수
+22. owe [v] : (보답으로 무언가를) 해 주어야 한다
+23. corresponding [a] : 상응하는
+24. be entitled to do [v] : ~할 자격이 있다
+25. to put it mildly [ad] : 부드럽게 말하자면
+26. all that [ad] : 그다지
+27. confidently [ad] : 확신에 찬
+28. fulfill one's end of the bargain [v] : ~의 의무를 다하다
 
 [2페이지: 29~58번]
-29. obligation : 의무, 책임
-30. relationship : 관계
-31. possess : 가지다, 소지하다
-32. mathematically : 수학적으로
-33. literate : 문해력이 있는, 글을 읽고 쓸 줄 아는
-34. critically : 비판적으로
-35. bearing : 관련, 영향
-36. interdisciplinary : 범교과적인, 학제 간의
-37. mirror : 반영하다, 잘 보여주다
-38. mathematical : 수학적인
-39. navigate : 탐색하다, 항해하다, 처리하다
-40. quantify : 수량화하다
-41. societal issue : 사회적 문제
-42. informed : 정보에 입각한, 잘 아는
-43. innovative : 혁신적인
-44. measure : 측정하다
-45. estimate : 추산하다
-46. conjecture : 추측하다
-47. generalize : 일반화하다
-48. along with : ~과 함께
-49. excuse : 변명
-50. classify : 분류하다
-51. justify : 근거를 제시하다
-52. qualitatively : 질적으로 다른
-53. context : 맥락
-54. explicitly : 명시적으로
-55. convince : 설득하다
-56. content : 만족하는
-57. consequently : 결과적으로
-58. be subject to : ~하기 쉽다
+29. obligation [n] : 의무, 책임
+30. relationship [n] : 관계
+31. possess [v] : 가지다, 소지하다
+32. mathematically [ad] : 수학적으로
+33. literate [a] : 문해력이 있는, 글을 읽고 쓸 줄 아는
+34. critically [ad] : 비판적으로
+35. bearing [n] : 관련, 영향
+36. interdisciplinary [a] : 범교과적인, 학제 간의
+37. mirror [v] : 반영하다, 잘 보여주다
+38. mathematical [a] : 수학적인
+39. navigate [v] : 탐색하다, 항해하다, 처리하다
+40. quantify [v] : 수량화하다
+41. societal issue [n] : 사회적 문제
+42. informed [a] : 정보에 입각한, 잘 아는
+43. innovative [a] : 혁신적인
+44. measure [v] : 측정하다
+45. estimate [v] : 추산하다
+46. conjecture [v] : 추측하다
+47. generalize [v] : 일반화하다
+48. along with [ad] : ~과 함께
+49. excuse [n] : 변명
+50. classify [v] : 분류하다
+51. justify [v] : 근거를 제시하다
+52. qualitatively [ad] : 질적으로 다른
+53. context [n] : 맥락
+54. explicitly [ad] : 명시적으로
+55. convince [v] : 설득하다
+56. content [a] : 만족하는
+57. consequently [ad] : 결과적으로
+58. be subject to [v] : ~하기 쉽다
 
 [3페이지: 59~88번]
-59. regardless of : ~에 상관없이
-60. accompany : 수반하다
-61. senseless : 의미 없는, 무의미한
-62. control : 통제
-63. guilt : 죄책감
-64. eliminate : 없애다
-65. contentment : 만족
-66. resist : 거부하다
-67. downgrade : 낮추다
-68. maxim : 격언
-69. refuse : 거부하다
-70. self-assessment : 자기평가
-71. equally : 똑같이
-72. underestimate : 과소평가하다
-73. overestimate : 과대평가하다
-74. accurately : 정확하게
-75. inward : 내부의, 안의
-76. potential : 잠재력
-77. self-estimate : 자기평가
-78. be capable of : ~을 할 수 있다
-79. self-aware : 자신을 인식하는
-80. weakness : 약점
-81. state : 말하다
-82. damaging : 해로운
-83. capability : 능력
-84. cultivate : 기르다
-85. honestly : 정직하게
-86. discern : 식별하다, 이해하다
-87. generation : 세대
-88. high tech : 첨단 기술
+59. regardless of [ad] : ~에 상관없이
+60. accompany [v] : 수반하다
+61. senseless [a] : 의미 없는, 무의미한
+62. control [n] : 통제
+63. guilt [n] : 죄책감
+64. eliminate [v] : 없애다
+65. contentment [n] : 만족
+66. resist [v] : 거부하다
+67. downgrade [v] : 낮추다
+68. maxim [n] : 격언
+69. refuse [v] : 거부하다
+70. self-assessment [n] : 자기평가
+71. equally [ad] : 똑같이
+72. underestimate [v] : 과소평가하다
+73. overestimate [v] : 과대평가하다
+74. accurately [ad] : 정확하게
+75. inward [a] : 내부의, 안의
+76. potential [n] : 잠재력
+77. self-estimate [n] : 자기평가
+78. be capable of [v] : ~을 할 수 있다
+79. self-aware [a] : 자신을 인식하는
+80. weakness [n] : 약점
+81. state [v] : 말하다
+82. damaging [a] : 해로운
+83. capability [n] : 능력
+84. cultivate [v] : 기르다
+85. honestly [ad] : 정직하게
+86. discern [v] : 식별하다, 이해하다
+87. generation [n] : 세대
+88. high tech [n] : 첨단 기술
 
 [4페이지: 89~118번]
-89. convenience : 편리함
-90. desire : 욕망
-91. patience : 인내심
-92. fall prey to : ~의 먹잇감이 되다
-93. overnight : 하룻밤 사이에
-94. comfort : 편안함
-95. tempt : 유혹하다
-96. develop : 기르다, 발전시키다
-97. achieve : 이루다, 성취하다
-98. agriculture : 농업
-99. harvesting : 수확
-100. pest : 해충
-101. essential : 필수적인
-102. critical : 중요한
-103. stable : 안정적인
-104. settle : 정착하다
-105. raw : 원자재의
-106. soil : 토양
-107. biodiversity : 생물 다양성
-108. solution : 해결책
-109. ensure : 보장하다
-110. a range of : 다양한
-111. fertilizing : 비료 주기
-112. distribute : 분배하다
-113. date back : 거슬러 올라가다
-114. civilization : 문명
-115. supply : 공급
-116. vital : 중요한, 치명적인
-117. scarcity : 부족
-118. degradation : 저하, 악화
+89. convenience [n] : 편리함
+90. desire [n] : 욕망
+91. patience [n] : 인내심
+92. fall prey to [v] : ~의 먹잇감이 되다
+93. overnight [ad] : 하룻밤 사이에
+94. comfort [n] : 편안함
+95. tempt [v] : 유혹하다
+96. develop [v] : 기르다, 발전시키다
+97. achieve [v] : 이루다, 성취하다
+98. agriculture [n] : 농업
+99. harvesting [n] : 수확
+100. pest [n] : 해충
+101. essential [a] : 필수적인
+102. critical [a] : 중요한
+103. stable [a] : 안정적인
+104. settle [v] : 정착하다
+105. raw [a] : 원자재의
+106. soil [n] : 토양
+107. biodiversity [n] : 생물 다양성
+108. solution [n] : 해결책
+109. ensure [v] : 보장하다
+110. a range of [a] : 다양한
+111. fertilizing [n] : 비료 주기
+112. distribute [v] : 분배하다
+113. date back [v] : 거슬러 올라가다
+114. civilization [n] : 문명
+115. supply [n] : 공급
+116. vital [a] : 중요한, 치명적인
+117. scarcity [n] : 부족
+118. degradation [n] : 저하, 악화
 
 [5페이지: 119~148번]
-119. sustainable : 지속가능한
-120. address : 다루다
-121. psychologist : 심리학자
-122. empathize : 공감하다
-123. exhibit : 보이다
-124. trait : 특성
-125. perform : 수행하다
-126. figure out : 파악하다, 이해하다
-127. point of view : 관점, 견해
-128. make a suggestion : 제안하다
-129. acceptable : 용인되는
-130. unreliability : 신뢰할 수 없음
-131. introduction : 도입
-132. sustainable : 지속 가능한
-133. impact : 영향
-134. management : 관리
-135. resource : 자원
-136. nuclear : 핵의
-137. accompany : 수반하다
-138. profound : 심오한
-139. destroy : 소멸시키다, 파괴하다
-140. potential : 잠재적인
-141. take ~ into account : ~을 고려하다
-142. agriculture : 농업
-143. advance : 발전, 진보
-144. revolution : 혁명
-145. assess : 평가하다
-146. vivid : 생생한
-147. potential : 잠재적인
-148. similar to : ~과 유사한
+119. sustainable [a] : 지속가능한
+120. address [v] : 다루다
+121. psychologist [n] : 심리학자
+122. empathize [v] : 공감하다
+123. exhibit [v] : 보이다
+124. trait [n] : 특성
+125. perform [v] : 수행하다
+126. figure out [v] : 파악하다, 이해하다
+127. point of view [n] : 관점, 견해
+128. make a suggestion [v] : 제안하다
+129. acceptable [a] : 용인되는
+130. unreliability [n] : 신뢰할 수 없음
+131. introduction [n] : 도입
+132. sustainable [a] : 지속 가능한
+133. impact [n] : 영향
+134. management [n] : 관리
+135. resource [n] : 자원
+136. nuclear [a] : 핵의
+137. accompany [v] : 수반하다
+138. profound [a] : 심오한
+139. destroy [v] : 소멸시키다, 파괴하다
+140. potential [a] : 잠재적인
+141. take ~ into account [v] : ~을 고려하다
+142. agriculture [n] : 농업
+143. advance [n] : 발전, 진보
+144. revolution [n] : 혁명
+145. assess [v] : 평가하다
+146. vivid [a] : 생생한
+147. potential [a] : 잠재적인
+148. similar to [a] : ~과 유사한
 
 [6페이지: 149~178번]
-149. dependence upon : ~에 대한 의존
-150. attract : 유혹하다
-151. flashy : 화려한
-152. refer to : ~을 언급하다
-153. obtain : 얻다
-154. resource : 자원
-155. effectively : 효과적으로
-156. draw : 끌어들이다
-157. establishment : 가게, 기관, 시설
-158. financial : 재정적인
-159. offering : 제공물
-160. market : 광고하다
-161. organism : 생물
-162. valuable : 귀중한
-163. advertise : 광고하다
-164. commitment : 약속
-165. predictable : 예측할 수 있는, 예측 가능한
-166. thereby : 그렇게 함으로써
-167. coordination : 조정
-168. agent : 주체, 행위자
-169. destination : 목적지
-170. construction : 건설
-171. be willing to do : 기꺼이 ~하다
-172. take a measure : 조치를 취하다
-173. currency : 통화
-174. institution : 제도
-175. stability : 안정성
-176. hold together : 결속하다, 결합하다
-177. facilitate : 용이하게 하다
-178. joint : 공동의
+149. dependence upon [n] : ~에 대한 의존
+150. attract [v] : 유혹하다
+151. flashy [a] : 화려한
+152. refer to [v] : ~을 언급하다
+153. obtain [v] : 얻다
+154. resource [n] : 자원
+155. effectively [ad] : 효과적으로
+156. draw [v] : 끌어들이다
+157. establishment [n] : 가게, 기관, 시설
+158. financial [a] : 재정적인
+159. offering [n] : 제공물
+160. market [v] : 광고하다
+161. organism [n] : 생물
+162. valuable [a] : 귀중한
+163. advertise [v] : 광고하다
+164. commitment [n] : 약속
+165. predictable [a] : 예측할 수 있는, 예측 가능한
+166. thereby [ad] : 그렇게 함으로써
+167. coordination [n] : 조정
+168. agent [n] : 주체, 행위자
+169. destination [n] : 목적지
+170. construction [n] : 건설
+171. be willing to do [v] : 기꺼이 ~하다
+172. take a measure [v] : 조치를 취하다
+173. currency [n] : 통화
+174. institution [n] : 제도
+175. stability [n] : 안정성
+176. hold together [v] : 결속하다, 결합하다
+177. facilitate [v] : 용이하게 하다
+178. joint [a] : 공동의
 
 [7페이지: 179~208번]
-179. transport : 수송하다, 운반하다
-180. afterwards : 나중에
-181. credible : 신뢰할 만한
-182. notably : 특히
-183. sustain : 유지하다
-184. in question : 해당하는
-185. collaboration : 협력
-186. determine : 측정하다, 알아내다, 밝히다
-187. mass : 질량
-188. compare : 비교하다
-189. weigh : 무게가 나가다
-190. measure : 측정하다
-191. value : 값
-192. calculate : 계산하다
-193. equation : 방정식
-194. unmediated : 중재되지 않은
-195. independently : 독립적으로
-196. property : 값, 특성, 속성
-197. magnitude : 크기, 규모
-198. balance : 저울
-199. cube : 정육면체
-200. complicated : 복잡한
-201. roughly : 대략적으로
-202. instance : 사례
-203. quantity : 수치, 다수, 다량
-204. measurement : 측정
-205. estimation : 측정, 평가치
-206. existing : 기존의, 존재하는
-207. determination : 계산, 측정
-208. firm : 기업
+179. transport [v] : 수송하다, 운반하다
+180. afterwards [ad] : 나중에
+181. credible [a] : 신뢰할 만한
+182. notably [ad] : 특히
+183. sustain [v] : 유지하다
+184. in question [a] : 해당하는
+185. collaboration [n] : 협력
+186. determine [v] : 측정하다, 알아내다, 밝히다
+187. mass [n] : 질량
+188. compare [v] : 비교하다
+189. weigh [v] : 무게가 나가다
+190. measure [n] : 측정
+191. value [n] : 값
+192. calculate [v] : 계산하다
+193. equation [n] : 방정식
+194. unmediated [a] : 중재되지 않은
+195. independently [ad] : 독립적으로
+196. property [n] : 값, 특성, 속성
+197. magnitude [n] : 크기, 규모
+198. balance [n] : 저울
+199. cube [n] : 정육면체
+200. complicated [a] : 복잡한
+201. roughly [ad] : 대략적으로
+202. instance [n] : 사례
+203. quantity [n] : 수치, 다수, 다량
+204. measurement [n] : 측정
+205. estimation [n] : 측정, 평가치
+206. existing [a] : 기존의, 존재하는
+207. determination [n] : 계산, 측정
+208. firm [n] : 기업
 
 [8페이지: 209~238번]
-209. concentrate on : ~에 집중하다
-210. profitable : 수익이 있는
-211. moral hazard : 도덕적 해이
-212. rescue : 구제하다
-213. intervene : 개입하다
-214. affect : 영향을 미치다
-215. save : 구제하다
-216. restructure : 구조를 조정하다
-217. in the long term : 장기적으로
-218. alter : 바꾸다
-219. credit crisis : 금융 위기
-220. negatively : 부정적으로
-221. risky : 위험한
-222. overrate : 과대평가하다
-223. in part : 부분적으로
-224. so as to do : ~할 만큼
-225. implement : 도구
-226. fundamental : 근본적인
-227. exercise : 발휘하다
-228. bottle feeding : 젖병 수유
-229. potentially : 잠재적으로
-230. entirely : 완전히
-231. impact : 영향
-232. absorb : 흡수하다
-233. invisible : 눈에 보이지 않는
-234. transform : 바꾸다
-235. classic : 전형적인
-236. function : 기능하다
-237. substitute for : ~을 대신하다
-238. implication : 영향
+209. concentrate on [v] : ~에 집중하다
+210. profitable [a] : 수익이 있는
+211. moral hazard [n] : 도덕적 해이
+212. rescue [v] : 구제하다
+213. intervene [v] : 개입하다
+214. affect [v] : 영향을 미치다
+215. save [v] : 구제하다
+216. restructure [v] : 구조를 조정하다
+217. in the long term [ad] : 장기적으로
+218. alter [v] : 바꾸다
+219. credit crisis [n] : 금융 위기
+220. negatively [ad] : 부정적으로
+221. risky [a] : 위험한
+222. overrate [v] : 과대평가하다
+223. in part [ad] : 부분적으로
+224. so as to do [ad] : ~할 만큼
+225. implement [n] : 도구
+226. fundamental [a] : 근본적인
+227. exercise [v] : 발휘하다
+228. bottle feeding [n] : 젖병 수유
+229. potentially [ad] : 잠재적으로
+230. entirely [ad] : 완전히
+231. impact [n] : 영향
+232. absorb [v] : 흡수하다
+233. invisible [a] : 눈에 보이지 않는
+234. transform [v] : 바꾸다
+235. classic [a] : 전형적인
+236. function [v] : 기능하다
+237. substitute for [v] : ~을 대신하다
+238. implication [n] : 영향
 
 [9페이지: 239~268번]
-239. overlook : 간과하다
-240. historian : 역사학자
-241. accurate : 정확한
-242. progress : 발전
-243. play a role in : ~에 역할을 하다
-244. stroke : (시계나 종이) 치는 소리
-245. contribute : 기여하다
-246. commerce : 상업
-247. transaction : 거래
-248. wholesaler : 도매업자
-249. efficient : 효율적인
-250. significance : 중요성
-251. measurement : 측정
-252. mechanical : 기계의, 기계적인
-253. peak : 최고점
-254. facilitate : 촉진하다
-255. interaction : 상호 작용
-256. retailer : 소매업자
-257. allocate : 분배하다, 할당하다
-258. remarkable : 주목할 만한
-259. unwind : 긴장을 풀다
-260. outcome : 결과
-261. inevitable : 피할 수 없는
-262. undercut : 약화시키다
-263. extent : 정도
-264. fantasize : 상상하다
-265. objective : 목표
-266. obstacle : 장애물
-267. temporary : 일시적인
-268. advent : 출현
+239. overlook [v] : 간과하다
+240. historian [n] : 역사학자
+241. accurate [a] : 정확한
+242. progress [n] : 발전
+243. play a role in [v] : ~에 역할을 하다
+244. stroke [n] : (시계나 종이) 치는 소리
+245. contribute [v] : 기여하다
+246. commerce [n] : 상업
+247. transaction [n] : 거래
+248. wholesaler [n] : 도매업자
+249. efficient [a] : 효율적인
+250. significance [n] : 중요성
+251. measurement [n] : 측정
+252. mechanical [a] : 기계의, 기계적인
+253. peak [n] : 최고점
+254. facilitate [v] : 촉진하다
+255. interaction [n] : 상호 작용
+256. retailer [n] : 소매업자
+257. allocate [v] : 분배하다, 할당하다
+258. remarkable [a] : 주목할 만한
+259. unwind [v] : 긴장을 풀다
+260. outcome [n] : 결과
+261. inevitable [a] : 피할 수 없는
+262. undercut [v] : 약화시키다
+263. extent [n] : 정도
+264. fantasize [v] : 상상하다
+265. objective [n] : 목표
+266. obstacle [n] : 장애물
+267. temporary [a] : 일시적인
+268. advent [n] : 출현
 
 [10페이지: 269~298번]
-269. workplace : 직장
-270. prediction : 전망, 예측
-271. sense : 감지하다
-272. survey : 설문 조사
-273. executive : 임원, 간부
-274. bump : 부딪히다
-275. Artificial Intelligence : 인공 지능
-276. replace : 대신하다
-277. mimic : 모방하다
-278. puzzle : 당혹하게 하다
-279. take over : 점령하다
-280. routine : 일상적인
-281. relevance : 적합성, 타당성, 관련성
-282. assume : 가정하다
-283. more often than not : 대개, 자주
-284. embrace : 포용하다, 껴안다
-285. executive leadership : 경영 지도자
-286. expose : 노출하다
-287. excel : 탁월하다
-288. ultimately : 결국, 궁극적으로
-289. update : 새롭게 하다
-290. fast track : 승진 가도, 빠른 길
-291. ambitious : 야심에 찬
-292. victim : 희생자
-293. advance : 발전; 발전시키다
-294. integrate : 흡수하다, 통합하다
-295. resistant : 저항하는
-296. retirement : 은퇴
-297. conceivable : 생각할 수 있는
-298. solar : 태양의
+269. workplace [n] : 직장
+270. prediction [n] : 전망, 예측
+271. sense [v] : 감지하다
+272. survey [n] : 설문 조사
+273. executive [n] : 임원, 간부
+274. bump [v] : 부딪히다
+275. Artificial Intelligence [n] : 인공 지능
+276. replace [v] : 대신하다
+277. mimic [v] : 모방하다
+278. puzzle [v] : 당혹하게 하다
+279. take over [v] : 점령하다
+280. routine [a] : 일상적인
+281. relevance [n] : 적합성, 타당성, 관련성
+282. assume [v] : 가정하다
+283. more often than not [ad] : 대개, 자주
+284. embrace [v] : 포용하다, 껴안다
+285. executive leadership [n] : 경영 지도자
+286. expose [v] : 노출하다
+287. excel [v] : 탁월하다
+288. ultimately [ad] : 결국, 궁극적으로
+289. update [v] : 새롭게 하다
+290. fast track [n] : 승진 가도, 빠른 길
+291. ambitious [a] : 야심에 찬
+292. victim [n] : 희생자
+293. advance [v] : 발전시키다
+294. integrate [v] : 흡수하다, 통합하다
+295. resistant [a] : 저항하는
+296. retirement [n] : 은퇴
+297. conceivable [a] : 생각할 수 있는
+298. solar [a] : 태양의
 
 [11페이지: 299~326번]
-299. collapse : 폭락
-300. maximize : 극대화하다
-301. steep : 가파른
-302. add up : 계산이 맞다
-303. radiation : 방사선
-304. constant : 끊임없는
-305. army : 군단
-306. installation : 설치
-307. exploration : 탐사, 탐험
-308. incredibly : 엄청나게
-309. launch : 발사하다
-310. atmosphere : 대기
-311. drop : 하락
-312. maintenance : 유지 보수
-313. endure : 견디다
-314. astronaut : 우주 비행사
-315. advanced : 첨단의, 발전된
-316. impractical : 비실용적인
-317. opt for : ~을 선택하다
-318. interest rate : 이율
-319. generously : 충분히
-320. hold out : 기다리다, 버티다
-321. introduction : 도입
-322. phenomenon : 현상
-323. hyperbolic discounting : 가치 폄하효과
-324. be willing to do : 기꺼이 ~하다
-325. drawback : 단점
-326. sum : 총액
+299. collapse [n] : 폭락
+300. maximize [v] : 극대화하다
+301. steep [a] : 가파른
+302. add up [v] : 계산이 맞다
+303. radiation [n] : 방사선
+304. constant [a] : 끊임없는
+305. army [n] : 군단
+306. installation [n] : 설치
+307. exploration [n] : 탐사, 탐험
+308. incredibly [ad] : 엄청나게
+309. launch [v] : 발사하다
+310. atmosphere [n] : 대기
+311. drop [n] : 하락
+312. maintenance [n] : 유지 보수
+313. endure [v] : 견디다
+314. astronaut [n] : 우주 비행사
+315. advanced [a] : 첨단의, 발전된
+316. impractical [a] : 비실용적인
+317. opt for [v] : ~을 선택하다
+318. interest rate [n] : 이율
+319. generously [ad] : 충분히
+320. hold out [v] : 기다리다, 버티다
+321. introduction [n] : 도입
+322. phenomenon [n] : 현상
+323. hyperbolic discounting [n] : 가치 폄하효과
+324. be willing to do [v] : 기꺼이 ~하다
+325. drawback [n] : 단점
+326. sum [n] : 총액
 
 [12페이지: 327~356번]
-327. compensate for : ~을 보상하다
-328. right away : 즉시
-329. figure : 판단하다, 생각하다
-330. inconsistent : 일관성 없는
-331. immediacy : 즉시성
-332. neuroscience : 뇌 과학
-333. strive for : ~을 추구하다
-334. homeostasis : 항상성
-335. compensatory mechanism : 보상 기제
-336. cushion : 완화하다, 완충 작용을 하다
-337. highs and lows : 변동, 기복
-338. be reliant on : ~에 의존하다
-339. opposite : 반대의
-340. correspondingly : 상응하여
-341. miserable : 비참한
-342. neutral : 중립적인, 중립의
-343. internal : 내부의
-344. hinder : 방해하다
-345. counteraction : 상쇄 작용
-346. ignorance : 무지
-347. process : 처리하다
-348. be capable of : ~을 할 수 있다
-349. balance : 균형, 균형 상태
-350. scale : 저울
-351. psychiatrist : 정신과 의사
-352. component : 구성 요소
-353. in turn : 결과적으로, 결국
-354. interplay : 상호 작용
-355. disruption : 붕괴
-356. induce : 유발하다
+327. compensate for [v] : ~을 보상하다
+328. right away [ad] : 즉시
+329. figure [v] : 판단하다, 생각하다
+330. inconsistent [a] : 일관성 없는
+331. immediacy [n] : 즉시성
+332. neuroscience [n] : 뇌 과학
+333. strive for [v] : ~을 추구하다
+334. homeostasis [n] : 항상성
+335. compensatory mechanism [n] : 보상 기제
+336. cushion [v] : 완화하다, 완충 작용을 하다
+337. highs and lows [n] : 변동, 기복
+338. be reliant on [v] : ~에 의존하다
+339. opposite [a] : 반대의
+340. correspondingly [ad] : 상응하여
+341. miserable [a] : 비참한
+342. neutral [a] : 중립적인, 중립의
+343. internal [a] : 내부의
+344. hinder [v] : 방해하다
+345. counteraction [n] : 상쇄 작용
+346. ignorance [n] : 무지
+347. process [v] : 처리하다
+348. be capable of [v] : ~을 할 수 있다
+349. balance [n] : 균형, 균형 상태
+350. scale [n] : 저울
+351. psychiatrist [n] : 정신과 의사
+352. component [n] : 구성 요소
+353. in turn [ad] : 결과적으로, 결국
+354. interplay [n] : 상호 작용
+355. disruption [n] : 붕괴
+356. induce [v] : 유발하다
 
 [13페이지: 357~386번]
-357. recognize : 인식하다
-358. value : 가치
-359. context : 맥락
-360. objective : 객관적인
-361. viewpoint : 관점
-362. independently of : ~와 무관하게
-363. tradition : 전통
-364. characteristic : 특유한, 특징적인
-365. purely : 순전히
-366. pursuit : 추구
-367. underlying : 근원적인
-368. diversity : 다양성
-369. similar : 비슷한, 유사한
-370. aspire : 열망하다
-371. gender : 성별
-372. carry out : 수행하다
-373. perspective : 관점
-374. confidence : 자신감
-375. view : 견해
-376. maintain : 주장하다
-377. solution : 해결책
-378. ethnicity : 인종
-379. pursue : 추구하다
-380. angle : 각도
-381. specify : 구체적으로 말하다
-382. cognitive : 인지적인
-383. negotiate : 협상하다
-384. empathetic : 공감적인
-385. compassion : 동정심
-386. foster : 기르다, 키우다
+357. recognize [v] : 인식하다
+358. value [n] : 가치
+359. context [n] : 맥락
+360. objective [a] : 객관적인
+361. viewpoint [n] : 관점
+362. independently of [ad] : ~와 무관하게
+363. tradition [n] : 전통
+364. characteristic [a] : 특유한, 특징적인
+365. purely [ad] : 순전히
+366. pursuit [n] : 추구
+367. underlying [a] : 근원적인
+368. diversity [n] : 다양성
+369. similar [a] : 비슷한, 유사한
+370. aspire [v] : 열망하다
+371. gender [n] : 성별
+372. carry out [v] : 수행하다
+373. perspective [n] : 관점
+374. confidence [n] : 자신감
+375. view [n] : 견해
+376. maintain [v] : 주장하다
+377. solution [n] : 해결책
+378. ethnicity [n] : 인종
+379. pursue [v] : 추구하다
+380. angle [n] : 각도
+381. specify [v] : 구체적으로 말하다
+382. cognitive [a] : 인지적인
+383. negotiate [v] : 협상하다
+384. empathetic [a] : 공감적인
+385. compassion [n] : 동정심
+386. foster [v] : 기르다, 키우다
 
 [14페이지: 387~416번]
-387. fulfill : 충족시키다
-388. the deaf : 청각 장애인
-389. stress : 강조하다
-390. emphasize : 강조하다
-391. affective : 정서적인
-392. concern : 관심
-393. consultant : 자문 위원
-394. translate : 의미하다
-395. the blind : 시각 장애인
-396. the color-blind : 색맹
-397. device : 장치
-398. in spite of : ~에도 불구하고
-399. wheeled : 바퀴가 달린
-400. baby carriage : 유아차
-401. majority : 대다수
-402. regular : 단골의, 일반의, 평범한
-403. logic : 논리
-404. seek : 구하다
-405. advertisement : 광고
-406. reluctant : 꺼려하는, 마지못해 하는
-407. attractive : 매력적인
-408. disguise : 변장하다
-409. accomplish : 달성하다
-410. readily : 기꺼이
-411. central : 가장 중요한
-412. identity : 정체성
-413. anthropologist : 인류학자
-414. stand to reason : 당연하다, 도리에 맞다
-415. decline : 감소
-416. relieve : 경감하다, 해방시키다
+387. fulfill [v] : 충족시키다
+388. the deaf [n] : 청각 장애인
+389. stress [v] : 강조하다
+390. emphasize [v] : 강조하다
+391. affective [a] : 정서적인
+392. concern [n] : 관심
+393. consultant [n] : 자문 위원
+394. translate [v] : 의미하다
+395. the blind [n] : 시각 장애인
+396. the color-blind [n] : 색맹
+397. device [n] : 장치
+398. in spite of [ad] : ~에도 불구하고
+399. wheeled [a] : 바퀴가 달린
+400. baby carriage [n] : 유아차
+401. majority [n] : 대다수
+402. regular [a] : 단골의, 일반의, 평범한
+403. logic [n] : 논리
+404. seek [v] : 구하다
+405. advertisement [n] : 광고
+406. reluctant [a] : 꺼려하는, 마지못해 하는
+407. attractive [a] : 매력적인
+408. disguise [v] : 변장하다
+409. accomplish [v] : 달성하다
+410. readily [ad] : 기꺼이
+411. central [a] : 가장 중요한
+412. identity [n] : 정체성
+413. anthropologist [n] : 인류학자
+414. stand to reason [v] : 당연하다, 도리에 맞다
+415. decline [n] : 감소
+416. relieve [v] : 경감하다, 해방시키다
 
 [15페이지: 417~444번]
-417. responsibility : 책임
-418. career : 직업
-419. domestic : 가정의
-420. shift : 변화
-421. spark : 촉발시키다
-422. diversify : 다양화하다
-423. cuisine : 요리
-424. corporation : 기업
-425. exclusive : 한정된, 독점적인
-426. feed : 먹이다
-427. head off : ~을 막다
-428. conflict : 갈등
-429. dynamics : 역학
-430. pursuit : 일, 활동, 취미
-431. substantially : 상당히, 많이
-432. microwave : 전자레인지
-433. trunk : 줄기, 몸통
-434. branch : 나뭇가지
-435. emerge from : ~에서 나오다
-436. stem from : ~에서 나오다
-437. innovation : 혁신
-438. terms : 용어
-439. curriculum : 교육 과정
-440. disciplinary : 학문의, 교과의
-441. transform : 바꾸다, 변형하다
-442. discipline : 학문, 학과목
-443. reveal : 밝히다, 드러내다
-444. twig : 잔가지
+417. responsibility [n] : 책임
+418. career [n] : 직업
+419. domestic [a] : 가정의
+420. shift [n] : 변화
+421. spark [v] : 촉발시키다
+422. diversify [v] : 다양화하다
+423. cuisine [n] : 요리
+424. corporation [n] : 기업
+425. exclusive [a] : 한정된, 독점적인
+426. feed [v] : 먹이다
+427. head off [v] : ~을 막다
+428. conflict [n] : 갈등
+429. dynamics [n] : 역학
+430. pursuit [n] : 일, 활동, 취미
+431. substantially [ad] : 상당히, 많이
+432. microwave [n] : 전자레인지
+433. trunk [n] : 줄기, 몸통
+434. branch [n] : 나뭇가지
+435. emerge from [v] : ~에서 나오다
+436. stem from [v] : ~에서 나오다
+437. innovation [n] : 혁신
+438. terms [n] : 용어
+439. curriculum [n] : 교육 과정
+440. disciplinary [a] : 학문의, 교과의
+441. transform [v] : 바꾸다, 변형하다
+442. discipline [n] : 학문, 학과목
+443. reveal [v] : 밝히다, 드러내다
+444. twig [n] : 잔가지
 
 [16페이지: 445~452번]
-445. core : 핵심
-446. practitioner : 실무자, 종사자
-447. link : 연결 고리
-448. employ : 사용하다, 쓰다
-449. abstract : 추상하다
-450. boundary : 경계
-451. conception : 개념
-452. universal : 보편적인`;
+445. core [n] : 핵심
+446. practitioner [n] : 실무자, 종사자
+447. link [n] : 연결 고리
+448. employ [v] : 사용하다, 쓰다
+449. abstract [v] : 추상하다
+450. boundary [n] : 경계
+451. conception [n] : 개념
+452. universal [a] : 보편적인`;
 
 /* ══════════════════ Utilities ══════════════════ */
 
@@ -499,8 +499,7 @@ function parseWordsWithPages(text) {
   const lines = text.split("\n");
   const pages = {};
   let currentPage = null;
-  const allWords = [];
-  const seen = new Set();
+  const rawWords = [];
   for (const line of lines) {
     const trimmed = line.trim();
     if (!trimmed) continue;
@@ -515,64 +514,64 @@ function parseWordsWithPages(text) {
     else if (si2 !== -1) { eng = cleaned.slice(0, si2).trim(); kor = cleaned.slice(si2 + 3).trim(); }
     else continue;
     if (!eng || !kor) continue;
-    const key = eng.toLowerCase();
+    const posMatch = eng.match(/^(.+?)\s*\[([a-z]+)\]\s*$/);
+    const baseEng = posMatch ? posMatch[1].trim() : eng;
+    const pos = posMatch ? posMatch[2] : null;
+    rawWords.push({ eng: baseEng, kor, pos, page: currentPage || 0 });
+  }
+
+  // Group by baseEng+pos → merge kor meanings for same eng+pos
+  const groups = {};
+  for (const w of rawWords) {
+    const key = w.eng.toLowerCase() + "|" + (w.pos || "");
+    if (!groups[key]) groups[key] = { ...w, korList: [w.kor] };
+    else {
+      // Add new kor if skeleton is different
+      const existingSkels = groups[key].korList.map(k => korSkeleton(k));
+      const newSkel = korSkeleton(w.kor);
+      if (!existingSkels.some(s => s === newSkel)) {
+        groups[key].korList.push(w.kor);
+      }
+    }
+  }
+
+  // Build final word list
+  const allWords = [];
+  const seen = new Set();
+  for (const w of rawWords) {
+    const key = w.eng.toLowerCase() + "|" + (w.pos || "");
     if (seen.has(key)) continue;
     seen.add(key);
-    const word = { eng, kor, page: currentPage || 0 };
+    const group = groups[key];
+    const word = { eng: w.eng, kor: group.korList.join(", "), pos: w.pos, page: w.page };
     allWords.push(word);
-    if (currentPage) { if (!pages[currentPage]) pages[currentPage] = []; pages[currentPage].push(word); }
+    if (w.page && pages[w.page]) pages[w.page].push(word);
   }
   return { allWords, pages };
 }
 
-/*
-  ── Korean answer matching ──
-  Core idea: normalize both answer and user input by
-  1. Removing ~ and parentheses (but keeping parenthesized text as optional)
-  2. Normalizing Korean particles (조사) so 을↔를, 은↔는, 이↔가, 와↔과, 에서↔에 etc.
-     are treated as equivalent
-  3. Splitting comma-separated meanings → any single one is accepted
-*/
-
-// Normalize Korean particles to a canonical form
+/* ── Korean answer matching ── */
 function normalizeJosa(str) {
   return str
-    // object markers
     .replace(/을\b/g, "을").replace(/를\b/g, "을")
-    // topic markers
     .replace(/은\b/g, "은").replace(/는\b/g, "은")
-    // subject markers
     .replace(/이\b/g, "이").replace(/가\b/g, "이")
-    // and markers
     .replace(/와\b/g, "와").replace(/과\b/g, "와")
-    // location
     .replace(/에서\b/g, "에서")
-    // direction/method
     .replace(/으로\b/g, "로")
-    // possessive
     .replace(/의\b/g, "의");
 }
 
-// Create a "skeleton" of a Korean string for flexible comparison
 function korSkeleton(str) {
-  return normalizeJosa(
-    str
-      .replace(/~/g, "")
-      .replace(/\s+/g, "")
-      .toLowerCase()
-  );
+  return normalizeJosa(str.replace(/~/g, "").replace(/\s+/g, "").toLowerCase());
 }
 
-// Generate all accepted forms of a Korean answer
 function generateAccepted(rawKor) {
   const parts = rawKor.split(/[,;]/).map(s => s.trim()).filter(Boolean);
   const accepted = new Set();
   for (const part of parts) {
-    // 1. With parenthesized content merged (remove paren chars only)
     const withP = part.replace(/[()]/g, "");
-    // 2. Without parenthesized content
     const withoutP = part.replace(/\([^)]*\)/g, "");
-    // 3. Raw
     for (const v of [withP, withoutP, part]) {
       const sk = korSkeleton(v);
       if (sk) accepted.add(sk);
@@ -592,6 +591,13 @@ function checkAnswerEng(userAns, rawEng) {
   const u = userAns.trim().toLowerCase().replace(/\s+/g, " ");
   const e = rawEng.trim().toLowerCase().replace(/\s+/g, " ");
   return u === e;
+}
+
+// Generate hint: show first letter of each word/segment
+// "deal with" → "d___ w___"
+// "self-assessment" → "s___-a___"
+function generateHint(eng) {
+  return eng.replace(/[a-zA-Z]+/g, (match) => match[0] + "___");
 }
 
 const COUNTS = [10, 20, 30, 50, 100];
@@ -688,7 +694,7 @@ function InputScreen({ onStart }) {
       <div className="w-full rounded-2xl p-5 mb-4" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--fg-dim)" }}>단어 목록 ({allWords.length}개)</label>
         <textarea rows={6} value={text} onChange={(e) => { setText(e.target.value); setError(""); }}
-          placeholder={"[1페이지]\ntactic : 전술\nmilitary : 군대의"}
+          placeholder={"[1페이지]\ntactic [n] : 전술\nmilitary [a] : 군대의"}
           className="w-full rounded-xl p-4 text-sm resize-none outline-none focus:ring-2"
           style={{ background: "var(--input-bg)", color: "var(--fg)", border: "1px solid var(--border)", fontFamily: "var(--font-mono)", lineHeight: 1.7 }} />
       </div>
@@ -764,7 +770,7 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
   const total = words.length;
   const word = words[idx];
   const cm = qModes[idx] || "engToKor";
-  const hint = cm === "korToEng" ? word.eng[0] + "___" : null;
+  const hint = cm === "korToEng" ? generateHint(word.eng) : null;
 
   const submit = () => {
     if (status) return;
@@ -786,7 +792,6 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
   };
 
   const onKey = (e) => { if (e.key === "Enter") { if (!status) submit(); else goNext(); } };
-
   const progress = ((idx + (status ? 1 : 0)) / total) * 100;
 
   return (
@@ -826,9 +831,18 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
           border: status === "correct" ? "2px solid var(--correct)" : status === "wrong" ? "2px solid var(--wrong)" : "1px solid var(--border)",
           boxShadow: status === "correct" ? "0 0 30px rgba(34,197,94,0.12)" : status === "wrong" ? "0 0 30px rgba(239,68,68,0.12)" : "0 4px 24px rgba(0,0,0,0.06)",
         }}>
-        <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>
-          {cm === "engToKor" ? word.eng : word.kor}
-        </p>
+        {cm === "engToKor" ? (
+          <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>
+            {word.eng}{word.pos && <span className="text-lg font-semibold ml-2" style={{ color: "var(--fg-dim)" }}>[{word.pos}]</span>}
+          </p>
+        ) : (
+          <>
+            <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>
+              {word.kor}
+            </p>
+            {word.pos && <p className="text-sm mb-2" style={{ color: "var(--fg-dim)" }}>[{word.pos}]</p>}
+          </>
+        )}
         {hint && <p className="text-lg mt-1 font-mono" style={{ color: "var(--fg-dim)" }}>( {hint} )</p>}
 
         {status === "wrong" && (
@@ -879,7 +893,7 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
   const [retrying, setRetrying] = useState(false);
 
   if (retrying) {
-    return <QuizScreen words={shuffle(wrongList.map((w) => ({ eng: w.eng, kor: w.kor, page: w.page })))} globalMode={globalMode}
+    return <QuizScreen words={shuffle(wrongList.map((w) => ({ eng: w.eng, kor: w.kor, pos: w.pos, page: w.page })))} globalMode={globalMode}
       onHome={() => { setRetrying(false); onHome(); }}
       onFinish={(s, wl, mc) => { setRetrying(false); onRetry(s, wl, mc); }} />;
   }
@@ -943,7 +957,9 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
                 <div className="flex flex-col gap-1.5">
                   {wrongByPage[pg].map((w, i) => (
                     <div key={i} className="flex items-center justify-between py-2 px-3 rounded-xl text-sm" style={{ background: "var(--input-bg)" }}>
-                      <span className="font-semibold" style={{ color: "var(--fg)" }}>{w.eng}</span>
+                      <span className="font-semibold" style={{ color: "var(--fg)" }}>
+                        {w.eng}{w.pos && <span className="ml-1 font-normal" style={{ color: "var(--fg-dim)" }}>[{w.pos}]</span>}
+                      </span>
                       <span style={{ color: "var(--fg-dim)" }}>{w.kor}</span>
                     </div>
                   ))}
