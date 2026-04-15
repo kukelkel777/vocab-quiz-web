@@ -519,23 +519,16 @@ function parseWordsWithPages(text) {
     const pos = posMatch ? posMatch[2] : null;
     rawWords.push({ eng: baseEng, kor, pos, page: currentPage || 0 });
   }
-
-  // Group by baseEng+pos → merge kor meanings for same eng+pos
   const groups = {};
   for (const w of rawWords) {
     const key = w.eng.toLowerCase() + "|" + (w.pos || "");
     if (!groups[key]) groups[key] = { ...w, korList: [w.kor] };
     else {
-      // Add new kor if skeleton is different
       const existingSkels = groups[key].korList.map(k => korSkeleton(k));
       const newSkel = korSkeleton(w.kor);
-      if (!existingSkels.some(s => s === newSkel)) {
-        groups[key].korList.push(w.kor);
-      }
+      if (!existingSkels.some(s => s === newSkel)) groups[key].korList.push(w.kor);
     }
   }
-
-  // Build final word list
   const allWords = [];
   const seen = new Set();
   for (const w of rawWords) {
@@ -550,54 +543,33 @@ function parseWordsWithPages(text) {
   return { allWords, pages };
 }
 
-/* ── Korean answer matching ── */
 function normalizeJosa(str) {
-  return str
-    .replace(/을\b/g, "을").replace(/를\b/g, "을")
-    .replace(/은\b/g, "은").replace(/는\b/g, "은")
-    .replace(/이\b/g, "이").replace(/가\b/g, "이")
-    .replace(/와\b/g, "와").replace(/과\b/g, "와")
-    .replace(/에서\b/g, "에서")
-    .replace(/으로\b/g, "로")
-    .replace(/의\b/g, "의");
+  return str.replace(/를\b/g, "을").replace(/는\b/g, "은").replace(/가\b/g, "이").replace(/과\b/g, "와").replace(/으로\b/g, "로");
 }
-
 function korSkeleton(str) {
   return normalizeJosa(str.replace(/~/g, "").replace(/\s+/g, "").toLowerCase());
 }
-
 function generateAccepted(rawKor) {
   const parts = rawKor.split(/[,;]/).map(s => s.trim()).filter(Boolean);
   const accepted = new Set();
   for (const part of parts) {
-    const withP = part.replace(/[()]/g, "");
-    const withoutP = part.replace(/\([^)]*\)/g, "");
-    for (const v of [withP, withoutP, part]) {
+    for (const v of [part.replace(/[()]/g, ""), part.replace(/\([^)]*\)/g, ""), part]) {
       const sk = korSkeleton(v);
       if (sk) accepted.add(sk);
     }
   }
   return [...accepted];
 }
-
 function checkAnswerKor(userAns, rawKor) {
   const uSkel = korSkeleton(userAns.replace(/[()]/g, ""));
   if (!uSkel) return false;
-  const acceptedList = generateAccepted(rawKor);
-  return acceptedList.some(a => a === uSkel || uSkel.includes(a) || a.includes(uSkel));
+  return generateAccepted(rawKor).some(a => a === uSkel || uSkel.includes(a) || a.includes(uSkel));
 }
-
 function checkAnswerEng(userAns, rawEng) {
-  const u = userAns.trim().toLowerCase().replace(/\s+/g, " ");
-  const e = rawEng.trim().toLowerCase().replace(/\s+/g, " ");
-  return u === e;
+  return userAns.trim().toLowerCase().replace(/\s+/g, " ") === rawEng.trim().toLowerCase().replace(/\s+/g, " ");
 }
-
-// Generate hint: show first letter of each word/segment
-// "deal with" → "d___ w___"
-// "self-assessment" → "s___-a___"
 function generateHint(eng) {
-  return eng.replace(/[a-zA-Z]+/g, (match) => match[0] + "___");
+  return eng.replace(/[a-zA-Z]+/g, (m) => m[0] + "___");
 }
 
 const COUNTS = [10, 20, 30, 50, 100];
@@ -612,9 +584,7 @@ function ComboDisplay({ combo, showBurst }) {
   return (
     <div className="flex flex-col items-center" style={{ transition: "all 0.3s", transform: showBurst ? `scale(${scale})` : "scale(1)" }}>
       <div className="flex items-center gap-2">
-        <span className="text-2xl font-black" style={{ color, fontFamily: "var(--font-display)", textShadow: combo >= 10 ? `0 0 20px ${color}40` : "none" }}>
-          {combo} COMBO
-        </span>
+        <span className="text-2xl font-black" style={{ color, fontFamily: "var(--font-display)", textShadow: combo >= 10 ? `0 0 20px ${color}40` : "none" }}>{combo} COMBO</span>
         {combo >= 5 && <span style={{ fontSize: combo >= 15 ? "1.5rem" : "1.2rem" }}>{combo >= 20 ? "🔥" : combo >= 10 ? "⚡" : "✨"}</span>}
       </div>
       {label && <span className="text-xs font-bold mt-0.5" style={{ color, opacity: 0.8 }}>{label}</span>}
@@ -662,24 +632,17 @@ function InputScreen({ onStart }) {
   const [selectedPages, setSelectedPages] = useState([]);
   const [usePageFilter, setUsePageFilter] = useState(false);
   const [error, setError] = useState("");
-
   const { allWords, pages } = parseWordsWithPages(text);
   const pageNums = Object.keys(pages).map(Number).sort((a, b) => a - b);
   const hasPages = pageNums.length > 0;
   const filteredWords = usePageFilter && selectedPages.length > 0 ? allWords.filter((w) => selectedPages.includes(w.page)) : allWords;
   const maxCount = filteredWords.length;
-
   useEffect(() => { if (count > maxCount && maxCount > 0) setCount(maxCount); }, [maxCount]);
-
   const handleStart = () => {
     if (filteredWords.length < 2) { setError("최소 2개 이상의 단어가 필요합니다."); return; }
-    const c = Math.min(count, maxCount);
-    onStart(shuffle(filteredWords).slice(0, c), mode);
+    onStart(shuffle(filteredWords).slice(0, Math.min(count, maxCount)), mode);
   };
-
-  const pageLabel = usePageFilter && selectedPages.length > 0
-    ? (selectedPages.length === pageNums.length ? "전체" : selectedPages.map((p) => `${p}p`).join(", "))
-    : "전체";
+  const pageLabel = usePageFilter && selectedPages.length > 0 ? (selectedPages.length === pageNums.length ? "전체" : selectedPages.map((p) => `${p}p`).join(", ")) : "전체";
 
   return (
     <div className="flex flex-col items-center w-full max-w-2xl mx-auto px-4">
@@ -690,15 +653,12 @@ function InputScreen({ onStart }) {
         <h1 className="text-3xl font-bold" style={{ color: "var(--fg)", fontFamily: "var(--font-display)" }}>영단어 퀴즈</h1>
         <p className="mt-2 text-sm" style={{ color: "var(--fg-dim)" }}>단어를 입력하고 퀴즈를 시작하세요</p>
       </div>
-
       <div className="w-full rounded-2xl p-5 mb-4" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--fg-dim)" }}>단어 목록 ({allWords.length}개)</label>
         <textarea rows={6} value={text} onChange={(e) => { setText(e.target.value); setError(""); }}
-          placeholder={"[1페이지]\ntactic [n] : 전술\nmilitary [a] : 군대의"}
           className="w-full rounded-xl p-4 text-sm resize-none outline-none focus:ring-2"
           style={{ background: "var(--input-bg)", color: "var(--fg)", border: "1px solid var(--border)", fontFamily: "var(--font-mono)", lineHeight: 1.7 }} />
       </div>
-
       {hasPages && (
         <div className="w-full rounded-2xl p-5 mb-4" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
           <div className="flex items-center justify-between mb-3">
@@ -711,7 +671,6 @@ function InputScreen({ onStart }) {
           {usePageFilter && <PageSelector pages={pages} selectedPages={selectedPages} setSelectedPages={(v) => { setSelectedPages(typeof v === "function" ? v(selectedPages) : v); setError(""); }} />}
         </div>
       )}
-
       <div className="w-full rounded-2xl p-5 mb-4" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <label className="block text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--fg-dim)" }}>퀴즈 모드</label>
         <div className="flex gap-2 flex-wrap">
@@ -721,7 +680,6 @@ function InputScreen({ onStart }) {
           ))}
         </div>
       </div>
-
       <div className="w-full rounded-2xl p-5 mb-6" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <label className="block text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "var(--fg-dim)" }}>
           문제 수 {usePageFilter && selectedPages.length > 0 && <span className="font-normal normal-case ml-1" style={{ color: "var(--accent)" }}>(최대 {maxCount})</span>}
@@ -735,9 +693,7 @@ function InputScreen({ onStart }) {
           ))}
         </div>
       </div>
-
       {error && <p className="text-sm mb-4 font-medium" style={{ color: "var(--wrong)" }}>{error}</p>}
-
       <button onClick={handleStart} className="w-full py-4 rounded-2xl text-lg font-bold transition-all hover:opacity-90 active:scale-[0.98]" style={{ background: "var(--accent)", color: "#fff" }}>
         {usePageFilter && selectedPages.length > 0 ? `퀴즈 시작 — ${pageLabel} (${Math.min(count, maxCount)}문제)` : `퀴즈 시작 (${Math.min(count, maxCount)}문제)`}
       </button>
@@ -750,13 +706,17 @@ function InputScreen({ onStart }) {
 function QuizScreen({ words, globalMode, onFinish, onHome }) {
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(null); // null | 'correct' | 'wrong'
   const [score, setScore] = useState(0);
   const [wrongList, setWrongList] = useState([]);
   const [qModes, setQModes] = useState([]);
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
   const [comboBurst, setComboBurst] = useState(false);
+  // History for go-back feature
+  const [history, setHistory] = useState([]); // [{word, mode, status, userAnswer}]
+  const [reviewing, setReviewing] = useState(false); // are we looking at a past question?
+  const [reviewIdx, setReviewIdx] = useState(0);
   const inputRef = useRef(null);
   const nextBtnRef = useRef(null);
 
@@ -764,8 +724,8 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
     setQModes(words.map(() => globalMode === "random" ? (Math.random() < 0.5 ? "engToKor" : "korToEng") : globalMode));
   }, [words, globalMode]);
 
-  useEffect(() => { if (!status) setTimeout(() => inputRef.current?.focus(), 50); }, [idx, status]);
-  useEffect(() => { if (status) setTimeout(() => nextBtnRef.current?.focus(), 50); }, [status]);
+  useEffect(() => { if (!status && !reviewing) setTimeout(() => inputRef.current?.focus(), 50); }, [idx, status, reviewing]);
+  useEffect(() => { if (status && !reviewing) setTimeout(() => nextBtnRef.current?.focus(), 50); }, [status, reviewing]);
 
   const total = words.length;
   const word = words[idx];
@@ -773,35 +733,139 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
   const hint = cm === "korToEng" ? generateHint(word.eng) : null;
 
   const submit = () => {
-    if (status) return;
+    if (status || reviewing) return;
     const isCorrect = cm === "engToKor" ? checkAnswerKor(input, word.kor) : checkAnswerEng(input, word.eng);
     if (isCorrect) {
       const nc = combo + 1;
       setStatus("correct"); setScore(score + 1); setCombo(nc);
       setMaxCombo(Math.max(maxCombo, nc));
       setComboBurst(true); setTimeout(() => setComboBurst(false), 400);
+      setHistory([...history, { word, mode: cm, status: "correct", userAnswer: input }]);
     } else {
       setStatus("wrong"); setCombo(0);
       setWrongList([...wrongList, { ...word, mode: cm, userAnswer: input }]);
+      setHistory([...history, { word, mode: cm, status: "wrong", userAnswer: input }]);
     }
   };
 
   const goNext = () => {
+    if (reviewing) { setReviewing(false); return; }
     if (idx + 1 >= total) onFinish(score, wrongList, maxCombo, combo);
     else { setIdx(idx + 1); setInput(""); setStatus(null); }
   };
 
-  const onKey = (e) => { if (e.key === "Enter") { if (!status) submit(); else goNext(); } };
+  const goPrev = () => {
+    if (reviewing) {
+      if (reviewIdx > 0) setReviewIdx(reviewIdx - 1);
+      else setReviewing(false); // go back to current question
+    } else if (history.length > 0) {
+      setReviewing(true);
+      setReviewIdx(history.length - 1);
+    }
+  };
+
+  const goNextReview = () => {
+    if (reviewIdx < history.length - 1) setReviewIdx(reviewIdx + 1);
+    else setReviewing(false); // back to current question
+  };
+
+  const onKey = (e) => {
+    if (e.key === "Enter") {
+      if (reviewing) goNext();
+      else if (!status) submit();
+      else goNext();
+    }
+  };
+
   const progress = ((idx + (status ? 1 : 0)) / total) * 100;
 
+  // Review mode: show past question
+  if (reviewing) {
+    const h = history[reviewIdx];
+    const rWord = h.word;
+    const rCm = h.mode;
+    return (
+      <div className="flex flex-col items-center w-full max-w-xl mx-auto px-4">
+        <div className="w-full flex items-center justify-between mb-2 mt-4">
+          <div className="flex items-center gap-2">
+            <button onClick={onHome} className="p-1.5 rounded-lg transition-all hover:opacity-70 active:scale-90" style={{ color: "var(--fg-dim)" }} title="홈으로">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </button>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: "var(--input-bg)", color: "var(--fg-dim)" }}>
+              복습 {reviewIdx + 1} / {history.length}
+            </span>
+          </div>
+        </div>
+
+        <div className="w-full h-2 rounded-full overflow-hidden mb-8" style={{ background: "var(--input-bg)" }}>
+          <div className="h-full rounded-full" style={{ width: `${progress}%`, background: "var(--accent)", opacity: 0.4 }} />
+        </div>
+
+        <div className="text-xs font-semibold px-3 py-1 rounded-full mb-4"
+          style={{ background: rCm === "engToKor" ? "rgba(99,102,241,0.12)" : "rgba(234,179,8,0.12)", color: rCm === "engToKor" ? "#6366f1" : "#ca8a04" }}>
+          {rCm === "engToKor" ? "영 → 한" : "한 → 영"}
+        </div>
+
+        <div className="w-full rounded-3xl p-8 text-center mb-6"
+          style={{
+            background: "var(--card)",
+            border: h.status === "correct" ? "2px solid var(--correct)" : "2px solid var(--wrong)",
+            boxShadow: h.status === "correct" ? "0 0 30px rgba(34,197,94,0.12)" : "0 0 30px rgba(239,68,68,0.12)",
+          }}>
+          {rCm === "engToKor" ? (
+            <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>
+              {rWord.eng}{rWord.pos && <span className="text-lg font-semibold ml-2" style={{ color: "var(--fg-dim)" }}>[{rWord.pos}]</span>}
+            </p>
+          ) : (
+            <>
+              <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>{rWord.kor}</p>
+              {rWord.pos && <p className="text-sm mb-2" style={{ color: "var(--fg-dim)" }}>[{rWord.pos}]</p>}
+            </>
+          )}
+
+          <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
+            <p className="text-xs font-semibold mb-1" style={{ color: h.status === "correct" ? "var(--correct)" : "var(--wrong)" }}>
+              {h.status === "correct" ? "정답" : "오답 — 정답"}
+            </p>
+            <p className="text-xl font-bold" style={{ color: "var(--fg)" }}>{rCm === "engToKor" ? rWord.kor : rWord.eng}</p>
+            {h.userAnswer && (
+              <p className="text-sm mt-2" style={{ color: "var(--fg-dim)" }}>
+                내 답: <span style={{ color: h.status === "correct" ? "var(--correct)" : "var(--wrong)", textDecoration: h.status === "wrong" ? "line-through" : "none" }}>{h.userAnswer}</span>
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="w-full flex gap-3">
+          {reviewIdx > 0 && (
+            <button onClick={goPrev} className="px-6 py-4 rounded-2xl font-bold text-base transition-all hover:opacity-90 active:scale-95"
+              style={{ background: "var(--input-bg)", color: "var(--fg-dim)", border: "1px solid var(--border)" }}>
+              ←
+            </button>
+          )}
+          <button ref={nextBtnRef} onClick={goNextReview} onKeyDown={onKey}
+            className="flex-1 py-4 rounded-2xl font-bold text-base transition-all hover:opacity-90 active:scale-95"
+            style={{ background: "var(--accent)", color: "#fff" }}>
+            {reviewIdx < history.length - 1 ? "다음 복습 →" : "현재 문제로 돌아가기"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Normal quiz mode
   return (
     <div className="flex flex-col items-center w-full max-w-xl mx-auto px-4">
       <div className="w-full flex items-center justify-between mb-2 mt-4">
         <div className="flex items-center gap-2">
-          <button onClick={onHome} className="p-1.5 rounded-lg transition-all hover:opacity-70 active:scale-90"
-            style={{ color: "var(--fg-dim)" }} title="홈으로">
+          <button onClick={onHome} className="p-1.5 rounded-lg transition-all hover:opacity-70 active:scale-90" style={{ color: "var(--fg-dim)" }} title="홈으로">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </button>
+          {history.length > 0 && (
+            <button onClick={goPrev} className="p-1.5 rounded-lg transition-all hover:opacity-70 active:scale-90" style={{ color: "var(--fg-dim)" }} title="이전 문제 보기">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+          )}
           <span className="text-xs font-semibold" style={{ color: "var(--fg-dim)" }}>
             {idx + 1} / {total}{word.page ? <span className="ml-1 opacity-60">({word.page}p)</span> : null}
           </span>
@@ -837,25 +901,28 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
           </p>
         ) : (
           <>
-            <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>
-              {word.kor}
-            </p>
+            <p className="text-3xl font-bold mb-2 break-keep" style={{ color: "var(--fg)", fontFamily: "var(--font-display)", lineHeight: 1.4 }}>{word.kor}</p>
             {word.pos && <p className="text-sm mb-2" style={{ color: "var(--fg-dim)" }}>[{word.pos}]</p>}
           </>
         )}
         {hint && <p className="text-lg mt-1 font-mono" style={{ color: "var(--fg-dim)" }}>( {hint} )</p>}
 
-        {status === "wrong" && (
+        {/* Show answer for both correct and wrong */}
+        {status && (
           <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
-            <p className="text-xs font-semibold mb-1" style={{ color: "var(--wrong)" }}>정답</p>
+            <p className="text-xs font-semibold mb-1" style={{ color: status === "correct" ? "var(--correct)" : "var(--wrong)" }}>
+              {status === "correct" ? "정답" : "오답 — 정답"}
+            </p>
             <p className="text-xl font-bold" style={{ color: "var(--fg)" }}>{cm === "engToKor" ? word.kor : word.eng}</p>
-            {input && <p className="text-sm mt-2" style={{ color: "var(--fg-dim)" }}>내 답: <span style={{ color: "var(--wrong)", textDecoration: "line-through" }}>{input}</span></p>}
-          </div>
-        )}
-        {status === "correct" && (
-          <div className="mt-4 flex items-center justify-center gap-2" style={{ color: "var(--correct)" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            <span className="font-bold">정답!</span>
+            {input && status === "wrong" && (
+              <p className="text-sm mt-2" style={{ color: "var(--fg-dim)" }}>내 답: <span style={{ color: "var(--wrong)", textDecoration: "line-through" }}>{input}</span></p>
+            )}
+            {status === "correct" && (
+              <div className="mt-2 flex items-center justify-center gap-1" style={{ color: "var(--correct)" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                <span className="text-sm font-bold">맞았습니다!</span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -891,19 +958,15 @@ function QuizScreen({ words, globalMode, onFinish, onHome }) {
 function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, onHome }) {
   const pct = Math.round((score / total) * 100);
   const [retrying, setRetrying] = useState(false);
-
   if (retrying) {
     return <QuizScreen words={shuffle(wrongList.map((w) => ({ eng: w.eng, kor: w.kor, pos: w.pos, page: w.page })))} globalMode={globalMode}
-      onHome={() => { setRetrying(false); onHome(); }}
-      onFinish={(s, wl, mc) => { setRetrying(false); onRetry(s, wl, mc); }} />;
+      onHome={() => { setRetrying(false); onHome(); }} onFinish={(s, wl, mc) => { setRetrying(false); onRetry(s, wl, mc); }} />;
   }
-
   let emoji = "🎉", msg = "완벽해요!";
   if (pct < 30) { emoji = "💪"; msg = "다시 도전해보세요!"; }
   else if (pct < 60) { emoji = "📖"; msg = "조금 더 연습하면 돼요!"; }
   else if (pct < 90) { emoji = "👏"; msg = "잘 하고 있어요!"; }
   else if (pct < 100) { emoji = "🔥"; msg = "거의 완벽해요!"; }
-
   const wrongByPage = {};
   wrongList.forEach((w) => { const p = w.page || 0; if (!wrongByPage[p]) wrongByPage[p] = []; wrongByPage[p].push(w); });
 
@@ -913,7 +976,6 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
         <div className="text-5xl mb-3">{emoji}</div>
         <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--fg)", fontFamily: "var(--font-display)" }}>{msg}</h2>
       </div>
-
       <div className="w-full rounded-3xl p-8 text-center mb-4" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <div className="text-5xl font-black mb-1" style={{ color: "var(--accent)", fontFamily: "var(--font-display)" }}>{pct}%</div>
         <p className="text-sm" style={{ color: "var(--fg-dim)" }}>{total}문제 중 {score}문제 정답</p>
@@ -922,7 +984,6 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
             style={{ width: `${pct}%`, background: pct >= 80 ? "var(--correct)" : pct >= 50 ? "var(--accent)" : "var(--wrong)" }} />
         </div>
       </div>
-
       <div className="w-full rounded-2xl p-5 mb-4 flex items-center justify-between" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
@@ -931,19 +992,12 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
           </div>
           <div>
             <div className="text-xs font-semibold" style={{ color: "var(--fg-dim)" }}>최대 콤보</div>
-            <div className="text-xl font-black" style={{ color: maxCombo >= 10 ? "#f59e0b" : maxCombo >= 5 ? "#ef4444" : "var(--accent)", fontFamily: "var(--font-display)" }}>
-              {maxCombo}x COMBO
-            </div>
+            <div className="text-xl font-black" style={{ color: maxCombo >= 10 ? "#f59e0b" : maxCombo >= 5 ? "#ef4444" : "var(--accent)", fontFamily: "var(--font-display)" }}>{maxCombo}x COMBO</div>
           </div>
         </div>
-        {maxCombo >= 5 && (
-          <span className="text-xs font-bold px-3 py-1 rounded-full"
-            style={{ background: maxCombo >= 10 ? "rgba(245,158,11,0.15)" : "rgba(239,68,68,0.1)", color: maxCombo >= 10 ? "#f59e0b" : "#ef4444" }}>
-            {maxCombo >= 20 ? "LEGENDARY" : maxCombo >= 15 ? "ON FIRE" : maxCombo >= 10 ? "AMAZING" : "NICE"}
-          </span>
-        )}
+        {maxCombo >= 5 && <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: maxCombo >= 10 ? "rgba(245,158,11,0.15)" : "rgba(239,68,68,0.1)", color: maxCombo >= 10 ? "#f59e0b" : "#ef4444" }}>
+          {maxCombo >= 20 ? "LEGENDARY" : maxCombo >= 15 ? "ON FIRE" : maxCombo >= 10 ? "AMAZING" : "NICE"}</span>}
       </div>
-
       {wrongList.length > 0 && (
         <div className="w-full rounded-2xl p-5 mb-6" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
           <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: "var(--wrong)" }}>
@@ -957,9 +1011,7 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
                 <div className="flex flex-col gap-1.5">
                   {wrongByPage[pg].map((w, i) => (
                     <div key={i} className="flex items-center justify-between py-2 px-3 rounded-xl text-sm" style={{ background: "var(--input-bg)" }}>
-                      <span className="font-semibold" style={{ color: "var(--fg)" }}>
-                        {w.eng}{w.pos && <span className="ml-1 font-normal" style={{ color: "var(--fg-dim)" }}>[{w.pos}]</span>}
-                      </span>
+                      <span className="font-semibold" style={{ color: "var(--fg)" }}>{w.eng}{w.pos && <span className="ml-1 font-normal" style={{ color: "var(--fg-dim)" }}>[{w.pos}]</span>}</span>
                       <span style={{ color: "var(--fg-dim)" }}>{w.kor}</span>
                     </div>
                   ))}
@@ -969,7 +1021,6 @@ function ResultScreen({ score, total, wrongList, maxCombo, globalMode, onRetry, 
           </div>
         </div>
       )}
-
       <div className="w-full flex gap-3">
         {wrongList.length > 0 && (
           <button onClick={() => setRetrying(true)} className="flex-1 py-4 rounded-2xl font-bold text-base transition-all hover:opacity-90 active:scale-95"
@@ -990,7 +1041,6 @@ export default function App() {
   const [mode, setMode] = useState("engToKor");
   const [result, setResult] = useState(null);
   const [dark, setDark] = useState(true);
-
   const vars = dark ? {
     "--bg": "#0f1117", "--fg": "#e8eaed", "--fg-dim": "#8b8fa3", "--card": "#181b24", "--border": "#262a36", "--input-bg": "#1e2130",
     "--accent": "#6366f1", "--accent-soft": "rgba(99,102,241,0.14)", "--correct": "#22c55e", "--wrong": "#ef4444",
@@ -1000,22 +1050,19 @@ export default function App() {
     "--accent": "#4f46e5", "--accent-soft": "rgba(79,70,229,0.1)", "--correct": "#16a34a", "--wrong": "#dc2626",
     "--font-display": "'Noto Sans KR', sans-serif", "--font-body": "'Noto Sans KR', sans-serif", "--font-mono": "'JetBrains Mono', monospace",
   };
-
   return (
     <div style={{ ...vars, background: "var(--bg)", color: "var(--fg)", minHeight: "100vh", fontFamily: "var(--font-body)", transition: "background 0.3s, color 0.3s" }}>
       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
       <div className="flex justify-end px-4 pt-4">
         <button onClick={() => setDark(!dark)} className="p-2.5 rounded-xl transition-all hover:opacity-80"
           style={{ background: "var(--card)", border: "1px solid var(--border)", color: "var(--fg-dim)" }}>
-          {dark
-            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          {dark ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>}
         </button>
       </div>
       <div className="pb-12">
         {screen === "input" && <InputScreen onStart={(w, m) => { setWords(w); setMode(m); setScreen("quiz"); }} />}
-        {screen === "quiz" && <QuizScreen words={words} globalMode={mode}
-          onHome={() => setScreen("input")}
+        {screen === "quiz" && <QuizScreen words={words} globalMode={mode} onHome={() => setScreen("input")}
           onFinish={(s, wl, mc, fc) => { setResult({ score: s, total: words.length, wrongList: wl, maxCombo: Math.max(mc, fc) }); setScreen("result"); }} />}
         {screen === "result" && <ResultScreen score={result.score} total={result.total} wrongList={result.wrongList} maxCombo={result.maxCombo}
           globalMode={mode} onRetry={(s, wl, mc) => setResult({ score: s, total: result.wrongList.length, wrongList: wl, maxCombo: mc })} onHome={() => setScreen("input")} />}
