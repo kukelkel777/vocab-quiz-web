@@ -2,6 +2,8 @@
 
 A fun and interactive English vocabulary quiz app. Features 3 quiz modes, combo system, word-edit yourself, page-based filtering, and wrong answer review. Built with React.
 
+https://kukelkel777.github.io/vocab-quiz-web/
+
 ## 기능
 
 - **3가지 퀴즈 모드**: 영→한, 한→영, 랜덤 혼합
