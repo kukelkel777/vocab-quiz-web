@@ -1,6 +1,8 @@
-# 📖 영단어 퀴즈
+# 영단어 퀴즈
 
 A fun and interactive English vocabulary quiz app. Features 3 quiz modes, combo system, word-edit yourself, page-based filtering, and wrong answer review. Built with React.
+
+https://kukelkel777.github.io/vocab-quiz-web/
 
 ## 기능
 
